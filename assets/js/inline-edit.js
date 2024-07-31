@@ -323,7 +323,7 @@ class InlineEdit {
         const btn = this.get('.btn-clear');
         if (btn) {
             const elem = this.getSelectedNode();
-            const fn = ['STRONG', 'EM', 'U', 'DEL', 'SPAN'].includes(elem.tagName) ? 'remove' : 'add';
+            const fn = ['A', 'U', 'EM', 'DEL', 'SPAN', 'STRONG'].includes(elem.tagName) ? 'remove' : 'add';
             btn.classList[fn]('disabled');
         }
     }
@@ -343,8 +343,6 @@ class InlineEdit {
     closeAll() {
         $apply('.inline-edit-wrapper.editing .inline-editable', elem => {
             elem.inEdit.close();
-            // elem.classList.remove('editing');
-            // $single('.inline-editable', elem).removeAttribute('contenteditable');
         });
     }
 
@@ -372,7 +370,7 @@ class InlineEdit {
     clearFormat() {
         const elem = this.getSelectedNode();
         if (elem) {
-            if (['STRONG', 'EM', 'U', 'DEL', 'SPAN'].includes(elem.tagName)) {
+            if (['A', 'U', 'EM', 'DEL', 'SPAN', 'STRONG'].includes(elem.tagName)) {
                 const parent = elem.parentNode;
                 while (elem.firstChild) {
                     parent.insertBefore(elem.firstChild, elem);
@@ -437,7 +435,7 @@ class InlineEdit {
             const dlg = new Dialog(link ? inEdit.editLink : inEdit.createLink);
             dlg.prompt("Digite a URL", (link && link.tagName == 'A') ? link.href : '').then(url => {
                 if (url) {
-                    if (link) {
+                    if (link && link.tagName == 'A') {
                         range = this.expandSelectionToNode(link);
                         link.href = url;
                     } else {
@@ -562,7 +560,7 @@ class InlineEdit {
         const section = this.element.getAttribute('data-editable');
         const post_id = this.element.getAttribute('data-id');
         const action = 'save_content';
-        ajax(inEdit.ajaxurl, { action, post_id, section, content }, 'POST').then(response => response.json()).then(data => {
+        ajax(inEdit.ajaxurl, { action, post_id, section, content }, 'POST').then(res => res.json()).then(data => {
             const dlg = new Dialog(inEdit.saveTitle);
             dlg.alert(data.message).then(() => {
                 if (!data.error) {
