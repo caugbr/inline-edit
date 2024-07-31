@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Inline Edit\n"
+"POT-Creation-Date: 2024-07-31 07:22-0300\n"
+"PO-Revision-Date: 2024-07-31 07:27-0300\n"
+"Last-Translator: \n"
+"Language-Team: Cau Guanabara\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: vue-app\n"
+"X-Poedit-SearchPathExcluded-1: .git\n"
+
+#: inline-edit.php:28
+msgid "WP-Helper is not installed and we depend on it."
+msgstr "WP-Helper não está instalado e dependemos dele."
+
+#: inline-edit.php:38
+msgid "Bold"
+msgstr "Negrito"
+
+#: inline-edit.php:39
+msgid "Italic"
+msgstr "Itálico"
+
+#: inline-edit.php:40
+msgid "Underline"
+msgstr "Sublinhado"
+
+#: inline-edit.php:41
+msgid "Strike through"
+msgstr "Riscado"
+
+#: inline-edit.php:42
+msgid "Link"
+msgstr "Link"
+
+#: inline-edit.php:43
+msgid "Create link"
+msgstr "Criat link"
+
+#: inline-edit.php:44
+msgid "Edit link"
+msgstr "Editar link"
+
+#: inline-edit.php:45
+msgid "Text color"
+msgstr "Cor do texto"
+
+#: inline-edit.php:46
+msgid "Clear format"
+msgstr "Limpar formatação"
+
+#: inline-edit.php:47
+msgid "Text format"
+msgstr "Formato do texto"
+
+#: inline-edit.php:48
+msgid "Font family"
+msgstr "Tipo da fonte"
+
+#: inline-edit.php:49
+msgid "Undo"
+msgstr "Desfazer"
+
+#: inline-edit.php:50
+msgid "Redo"
+msgstr "Refazer"
+
+#: inline-edit.php:51
+msgid "Update on server"
+msgstr "Atualizar no servidor"
+
+#: inline-edit.php:52
+msgid "Paragraph"
+msgstr "Parágrafo"
+
+#: inline-edit.php:53
+msgid "Title 1"
+msgstr "Título 1"
+
+#: inline-edit.php:54
+msgid "Title 2"
+msgstr "Título 2"
+
+#: inline-edit.php:55
+msgid "Title 3"
+msgstr "Título 3"
+
+#: inline-edit.php:56
+msgid "Title 4"
+msgstr "Título 4"
+
+#: inline-edit.php:57
+msgid "Title 5"
+msgstr "Título 5"
+
+#: inline-edit.php:58
+msgid "Pre formatted"
+msgstr "Pré formatado"
+
+#: inline-edit.php:59
+msgid "Update element"
+msgstr "Atualizar elemento"
+
+#: inline-edit.php:60
+msgid "There are unsaved changes. Discard?"
+msgstr "Há mudanças não salvas. Descartar?"
+
+#: inline-edit.php:93
+msgid "Content successfully updated"
+msgstr "Conteúdo atualizado com sucesso"
+
+#: inline-edit.php:94
+msgid "There was an error and the content could not be updated"
+msgstr "Houve algum erro e o conteúdo não pôde ser salvo"

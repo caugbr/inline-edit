@@ -1,0 +1,112 @@
+
+.inline-edit-wrapper {
+    position: relative;
+    display: inline-block;
+    width: auto;
+}
+.inline-edit-toolbar,
+.inline-edit-menu {
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0.25rem;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    transition: background-color 200ms ease-in-out 0s, opacity 200ms ease-in-out 0s;
+}
+.inline-edit-menu {
+    left: 100%;
+    transform: translate(-100%, -98%);
+}
+.inline-edit-wrapper.editing .link-open,
+.inline-edit-menu .link-close {
+    display: none;
+}
+.inline-edit-wrapper.editing .link-close {
+    display: inline-block;
+}
+.inline-edit-toolbar {
+    left: 0;
+    /* width: 100%; */
+    /* height: 40px; */
+    transform: translateY(-98%);
+}
+.inline-edit-toolbar .div {
+    display: inline-block;
+    background-color: #ccc;
+    width: 1px;
+    vertical-align: middle;
+    height: 20px;
+    margin: 0 0.25rem;
+}
+.inline-edit-toolbar a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    width: 24px;
+    height: 24px;
+    padding: 0.25rem;
+    border: 1px solid #dedede;
+    margin: 0.1rem;
+    text-decoration: none;
+    color: #333;
+    background-color: #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.inline-edit-toolbar .combo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    background-color: #ccc;
+    border-radius: 4px;
+    padding: 0.25rem;
+    border: 1px solid #dedede;
+    margin: 0.1rem;
+}
+.inline-edit-toolbar .combo .tb-combo {
+    font-size: 12px;
+    border: 0px;
+    background-color: #ededed;
+}
+.inline-edit-toolbar .combo .tb-combo option {
+    font-size: 12px;
+    background-color: #ededed;
+}
+.inline-editable {
+    transition: background-color 200ms ease-in-out 0s;
+    outline: none;
+}
+.inline-edit-wrapper.editing .inline-editable {
+    padding: 0.25rem;
+    border: 1px solid #eee;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.inline-edit-wrapper.editing .inline-edit-toolbar,
+.inline-edit-wrapper:hover .inline-edit-menu,
+.inline-edit-wrapper.editing .inline-edit-menu {
+    opacity: 1;
+    pointer-events: all;
+}
+.inline-edit-menu:hover,
+.inline-edit-menu:hover + .inline-editable,
+.inline-edit-wrapper.editing .inline-edit-toolbar,
+.inline-edit-wrapper.editing .inline-editable {
+    background-color: #f1f1f1;
+}
+
+.inline-edit-toolbar .disabled,
+.inline-edit-toolbar.no-focus a:not(.btn-undo,.btn-redo,.btn-save,.btn-clear),
+.inline-edit-toolbar.no-text a:not(.btn-undo,.btn-redo,.btn-save,.btn-clear),
+.inline-edit-toolbar.no-focus .combo {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: default;
+}
+.inline-edit-toolbar.no-text .combo {
+    opacity: 1;
+    pointer-events: all;
+}
