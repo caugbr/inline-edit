@@ -141,7 +141,7 @@ class InlineEdit {
         this.prepare();
     }
 
-    // Init
+    // Overwrite shortcuts
     initShortcuts() {
         if (!this.shortcutsAreSet) {
             document.addEventListener('keydown', event => {
@@ -157,6 +157,7 @@ class InlineEdit {
         this.shortcutsAreSet = true;
     }
     
+    // Prepare element to be edited
     prepare() {
         const linkOpen = tag('a', {'class': 'link-open', 'href': 'javascript://'}, '<i class="fa fa-pencil-square"></i>');
         linkOpen.addEventListener('click', event => this.edit(event.target.closest('a')));
@@ -184,7 +185,9 @@ class InlineEdit {
     }
 
     edit(a) {
-        this.closeAll();
+        if (!this.closeAll()) {
+            return;
+        }
         const parent = a.closest('.inline-edit-wrapper');
         parent.classList.add('editing');
         this.element = $single('.inline-editable', parent);
@@ -196,6 +199,7 @@ class InlineEdit {
     }
 
     // history
+
     saveState() {
         const content = this.element.innerHTML;
         if (this.history.current !== content) {
@@ -224,21 +228,6 @@ class InlineEdit {
         this.updateHistoryButtons();
     }
 
-    checkSelection() {
-        const selection = this.getSelection();
-        const bar = this.get('.inline-edit-toolbar');
-        bar.classList.remove('no-text');
-        bar.classList.remove('no-focus');
-        if (selection) {
-            if (!selection.toString()) {
-                bar.classList.add('no-text');
-            }
-            this.updateToolbar();
-        } else {
-            bar.classList.add('no-focus');
-        }
-    }
-
     toolbar() {
         const nodes = [];
         this.toolbarOrder.forEach(key => {
@@ -264,9 +253,9 @@ class InlineEdit {
                 nodes.push(span);
             }
         });
-        return tag('div', {'class': 'inline-edit-toolbar disabled'}, nodes);
+        return tag('div', {'class': 'inline-edit-toolbar'}, nodes);
     }
-    
+
     updateToolbar() {
         const elem = this.getSelectedNode();
         if (elem) {
@@ -341,9 +330,14 @@ class InlineEdit {
     }
     
     closeAll() {
+        let ret = true;
         $apply('.inline-edit-wrapper.editing .inline-editable', elem => {
-            elem.inEdit.close();
+            if (!elem.inEdit.close()) {
+                ret = false;
+                return false;
+            }
         });
+        return ret;
     }
 
     close(force = false) {
@@ -352,11 +346,14 @@ class InlineEdit {
             dlg.confirm(inEdit.unsaved).then(ok => {
                 if (ok) {
                     this.unedit();
+                    return true;
                 }
             });
         } else {
             this.unedit();
+            return true;
         }
+        return false;
     }
 
     unedit() {
@@ -366,6 +363,8 @@ class InlineEdit {
         this.history = { origin: '', current: '', undo: [], redo: [] };
         this.get().classList.remove('editing');
     }
+
+    // Commands
 
     clearFormat() {
         const elem = this.getSelectedNode();
@@ -489,6 +488,8 @@ class InlineEdit {
         });
     }
 
+    // Selection
+
     getSelectedNode(range = null) {
         range = range ? range : this.getSelection();
         if (range) {
@@ -539,6 +540,21 @@ class InlineEdit {
             }
         }
         return null;
+    }
+
+    checkSelection() {
+        const selection = this.getSelection();
+        const bar = this.get('.inline-edit-toolbar');
+        bar.classList.remove('no-text');
+        bar.classList.remove('no-focus');
+        if (selection) {
+            if (!selection.toString()) {
+                bar.classList.add('no-text');
+            }
+            this.updateToolbar();
+        } else {
+            bar.classList.add('no-focus');
+        }
     }
 
     hasNonTextNodes(range) {

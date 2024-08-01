@@ -14,6 +14,7 @@
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     transition: background-color 200ms ease-in-out 0s, opacity 200ms ease-in-out 0s;
+    border: 1px solid rgba(0, 0, 0, 0);
 }
 .inline-edit-menu {
     left: 100%;
@@ -97,16 +98,22 @@
 .inline-edit-wrapper.editing .inline-editable {
     background-color: #f3f3f3;
 }
+.inline-edit-wrapper.editing .inline-edit-menu:hover {
+    background-color: #f3f3f3;
+    border: 1px solid #ccc;
+    border-bottom-color: #f3f3f3;
+}
 
 .inline-edit-toolbar .disabled,
 .inline-edit-toolbar.no-focus a:not(.btn-undo,.btn-redo,.btn-save,.btn-clear),
 .inline-edit-toolbar.no-text a:not(.btn-undo,.btn-redo,.btn-save,.btn-clear),
+.inline-edit-toolbar.no-text .combo,
 .inline-edit-toolbar.no-focus .combo {
     opacity: 0.6;
     pointer-events: none;
     cursor: default;
 }
-.inline-edit-toolbar.no-text .combo {
+/* .inline-edit-toolbar.no-text .combo {
     opacity: 1;
     pointer-events: all;
-}
+} */
