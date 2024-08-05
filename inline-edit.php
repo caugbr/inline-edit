@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin name: Inline Edit
- * Description: Allow logged in users to edit some parts of HTML content on the frontend
+ * Description: Allow logged in users to edit some parts of HTML content directly from the frontend
  * Version: 1.0
  * Author: Cau Guanabara
  * Author URI: mailto:cauguanabara@gmail.com
@@ -29,9 +29,10 @@ class InlineEdit {
         }
         add_action('init', [$this, 'include_stuff']);
         add_action('wp_ajax_save_content', [$this, 'save_content']);
+        add_filter('wp_script_attributes', [$this, 'add_prop_module']);
     }
     
-    public function js_strings() {
+    private function js_strings() {
         return [
             "selector" => $this->selector,
             "ajaxurl" => admin_url('admin-ajax.php'),
@@ -43,6 +44,8 @@ class InlineEdit {
             "createLink" => __('Create link', 'inedit'),
             "editLink" => __('Edit link', 'inedit'),
             "color" => __('Text color', 'inedit'),
+            "editColor" => __('Edit color', 'inedit'),
+            "selectColor" => __('Select color', 'inedit'),
             "clear" => __('Clear format', 'inedit'),
             "format" => __('Text format', 'inedit'),
             "font" => __('Font family', 'inedit'),
@@ -70,6 +73,13 @@ class InlineEdit {
         }
     }
 
+    public function add_prop_module($attrs) { print "{$attrs['id']}\n";
+        if (isset( $attrs['id'] ) && $attrs['id'] === 'inline-edit-js-js') {
+          $attrs['type'] = 'module';
+        }
+        return $attrs;
+    }
+
     public function add_stuff() {
         wp_enqueue_script('inline-edit-js', INLINE_EDIT_URL . 'assets/js/inline-edit.js');
         wp_localize_script('inline-edit-js', 'inEdit', $this->js_strings());
@@ -79,18 +89,19 @@ class InlineEdit {
 
     public function save_content() {
         if (!empty($_POST['section']) && !empty($_POST['post_id']) && !empty($_POST['content'])) {
+            $content = stripslashes($_POST['content']);
             if (substr($_POST['section'], 0, 5) == 'meta:') {
                 $meta_name = str_replace("meta:", "", $_POST['section']);
-                $ret = update_post_meta($_POST['post_id'], $meta_name, $_POST['content']);
+                $ret = update_post_meta($_POST['post_id'], $meta_name, $content);
             } else {
                 $post = get_post($_POST['post_id']);
-                $post->{$_POST['section']} = $_POST['content'];
+                $post->{$_POST['section']} = $content;
                 $ret = wp_update_post($post);
             }
         }
         $msg = $ret ? __('Content successfully updated', 'inedit') 
                     : __('There was an error and the content could not be updated', 'inedit');
-        wp_send_json(['error' => !$ret, 'message' => $msg, 'content' => $_POST['content']]);
+        wp_send_json(['error' => !$ret, 'message' => $msg, 'content' => $content]);
     }
 
     private function can_edit() {

@@ -32,6 +32,7 @@
     transform: translateY(calc(-100% + 1px));
     border: 1px solid #ccc;
     border-bottom: 0px;
+    max-width: calc(100% - 26px);
 }
 .inline-edit-toolbar .div {
     display: inline-block;
@@ -57,6 +58,10 @@
     border-radius: 4px;
     cursor: pointer;
 }
+.inline-edit-toolbar a.btn-save {
+    background-color: #0e6bbc;
+    color: #ffffff;
+}
 .inline-edit-toolbar .combo {
     display: inline-flex;
     align-items: center;
@@ -68,12 +73,12 @@
     border: 1px solid #dedede;
     margin: 0.1rem;
 }
-.inline-edit-toolbar .combo .tb-combo {
+.inline-edit-toolbar .combo .ie-combo {
     font-size: 12px;
     border: 0px;
     background-color: #ededed;
 }
-.inline-edit-toolbar .combo .tb-combo option {
+.inline-edit-toolbar .combo .ie-combo option {
     font-size: 12px;
     background-color: #ededed;
 }
@@ -96,12 +101,12 @@
 .inline-edit-menu:hover + .inline-editable,
 .inline-edit-wrapper.editing .inline-edit-toolbar,
 .inline-edit-wrapper.editing .inline-editable {
-    background-color: #f3f3f3;
+    background-color: #fafafa;
 }
 .inline-edit-wrapper.editing .inline-edit-menu:hover {
-    background-color: #f3f3f3;
+    background-color: #fafafa;
     border: 1px solid #ccc;
-    border-bottom-color: #f3f3f3;
+    border-bottom-color: #fafafa;
 }
 
 .inline-edit-toolbar .disabled,
@@ -113,7 +118,3 @@
     pointer-events: none;
     cursor: default;
 }
-/* .inline-edit-toolbar.no-text .combo {
-    opacity: 1;
-    pointer-events: all;
-} */
