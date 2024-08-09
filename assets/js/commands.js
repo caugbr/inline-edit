@@ -13,7 +13,7 @@ const Commands = {
             'pre': inEdit.pre
         },
         tooltip: inEdit.format,
-        callback: event => this.applyFormat(event.target.value),
+        callback(event) { this.applyFormat(event.target.value); },
         methods: {
             applyFormat(tagName) {
                 let range = this.getSelection();
@@ -42,7 +42,7 @@ const Commands = {
             'Roboto, sans-serif': 'Roboto'
         },
         tooltip: inEdit.font,
-        callback: event => this.applyFontFamily(event.target.value),
+        callback(event) { this.applyFontFamily(event.target.value); },
         methods: {
             applyFontFamily(font) {
                 let range = this.getSelection();

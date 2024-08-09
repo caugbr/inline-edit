@@ -1,0 +1,19 @@
+{
+    "template": {
+        "iconSet": "dashicons",
+        "cssFile": "dashicons.css",
+        "cssFileId": "dashicons_css",
+        "icons": {
+            "bold": "dashicons dashicons-editor-bold",
+            "italic": "dashicons dashicons-editor-italic",
+            "underline": "dashicons dashicons-editor-underline",
+            "strike": "dashicons dashicons-editor-strikethrough",
+            "link": "dashicons dashicons-admin-links",
+            "color": "dashicons dashicons-editor-textcolor",
+            "clear": "dashicons dashicons-editor-removeformatting",
+            "undo": "dashicons dashicons-undo",
+            "redo": "dashicons dashicons-redo",
+            "save": "dashicons dashicons-saved"
+        }
+    }
+}

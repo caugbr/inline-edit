@@ -1,10 +1,12 @@
 <?php
 /**
  * Plugin name: Inline Edit
- * Description: Allow logged in users to edit some parts of HTML content directly from the frontend
+ * Description: Allow logged in users to edit some parts of HTML content directly from the frontend.
  * Version: 1.0
  * Author: Cau Guanabara
  * Author URI: mailto:cauguanabara@gmail.com
+ * Text Domain: inedit
+ * Domain Path: /langs/
  * License: Wordpress
  */
 
@@ -12,6 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+define('INLINE_EDIT_PATH', trailingslashit(str_replace("\\", "/", dirname(__FILE__))));
 define('INLINE_EDIT_URL', str_replace("\\", "/", plugin_dir_url(__FILE__)));
 
 class InlineEdit {
@@ -19,21 +22,56 @@ class InlineEdit {
     public $capability = 'manage_options';
     public $owner_can = true;
     public $selector = '*[data-editable]';
+    private $config;
 
     public function __construct() {
         global $wp_helper;
-        if ($wp_helper) {
-            $wp_helper->add_textdomain('inedit', dirname(plugin_basename(__FILE__)) . '/langs');
-        } else {
-            throw new Exception(__("WP-Helper is not installed and we depend on it.", 'inedit'));
+        global $require_zip_plugin;
+        if ($require_zip_plugin) {
+            $require_zip_plugin->require(
+                'Inline Edit', 
+                'WP Helper', 
+                'https://github.com/caugbr/wp-helper/archive/refs/heads/main.zip', 
+                'wp-helper/wp-helper.php'
+            );
         }
-        add_action('init', [$this, 'include_stuff']);
-        add_action('wp_ajax_save_content', [$this, 'save_content']);
-        add_filter('wp_script_attributes', [$this, 'add_prop_module']);
+        if ($wp_helper) {
+            $this->set_config();
+            $wp_helper->add_textdomain('inedit', dirname(plugin_basename(__FILE__)) . '/langs');
+            add_action('init', function() use($wp_helper) {
+                if ($this->can_edit()) {
+                    $wp_helper->load('popup', '__return_true', 'wp');
+                    $wp_helper->load('dialog', '__return_true', 'wp');
+                    $wp_helper->add_script(
+                        'inline-edit', INLINE_EDIT_URL . 'assets/js/inline-edit.js', [], true, ['inEdit', $this->js_strings()]
+                    );
+                    $wp_helper->add_style('inline-edit-css', INLINE_EDIT_URL . 'assets/css/inline-edit.css');
+                    if (!empty($this->config['template']) && !empty($this->config['template']['iconSet'])) {
+                        if ($this->config['template']['iconSet'] == 'dashicons') {
+                            $wp_helper->add_style('dashicons');
+                        }
+                    }
+                    if (empty($this->config['template']['iconSet']) || $this->config['template']['iconSet'] == 'font-awesome') {
+                        $wp_helper->add_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css');
+                    }
+                    if (!empty($this->config['template']['cssFile'])) {
+                        $id = $this->config['template']['cssFileId'] ?? explode(".", $this->config['template']['cssFile'])[0];
+                        $url = INLINE_EDIT_URL . "assets/css/{$this->config['template']['cssFile']}";
+                        $wp_helper->add_style($id, $url);
+                    }
+                }
+            });
+            add_action('wp_ajax_save_content', [$this, 'save_content']);
+        }
+    }
+    
+    private function set_config() {
+        $cfg = file_get_contents(INLINE_EDIT_PATH . '/config/config.json');
+        $this->config = json_decode($cfg, true);
     }
     
     private function js_strings() {
-        return [
+        return array_merge([
             "selector" => $this->selector,
             "ajaxurl" => admin_url('admin-ajax.php'),
             "bold" => __('Bold', 'inedit'),
@@ -61,30 +99,7 @@ class InlineEdit {
             "pre" => __('Pre formatted', 'inedit'),
             "saveTitle" => __('Update element', 'inedit'),
             "unsaved" => __('There are unsaved changes. Discard?', 'inedit')
-        ];
-    }
-    
-    public function include_stuff() {
-        if ($this->can_edit()) {
-            global $wp_helper;
-            $wp_helper->load('popup', '__return_true', 'wp');
-            $wp_helper->load('dialog', '__return_true', 'wp');
-            add_action('wp_enqueue_scripts', [$this, 'add_stuff']);
-        }
-    }
-
-    public function add_prop_module($attrs) { print "{$attrs['id']}\n";
-        if (isset( $attrs['id'] ) && $attrs['id'] === 'inline-edit-js-js') {
-          $attrs['type'] = 'module';
-        }
-        return $attrs;
-    }
-
-    public function add_stuff() {
-        wp_enqueue_script('inline-edit-js', INLINE_EDIT_URL . 'assets/js/inline-edit.js');
-        wp_localize_script('inline-edit-js', 'inEdit', $this->js_strings());
-        wp_enqueue_style('inline-edit-css', INLINE_EDIT_URL . 'assets/css/inline-edit.css');
-        wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css');
+        ], $this->config);
     }
 
     public function save_content() {

@@ -35,20 +35,17 @@ class InlineEdit {
         if (order) {
             this.toolbarOrder = order.trim().split(/\s*,\s*/);
         } else {
-            this.toolbarOrder = Object.keys(this.toolbarItems).map(e => e.replace(/^sep\d/, 'separator'));
+            this.toolbarOrder = [
+                "format", "font", "bold", "italic", "underline", "strike", "link", "color", 
+                "separator", "clear", "separator", "undo", "redo", "separator", "save"
+            ];
         }
         document.addEventListener('selectionchange', debounce(this.checkSelection.bind(this)));
         this.initShortcuts();
         this.prepare();
     }
 
-    static init() {
-        $apply(inEdit.selector, elem => {
-            const ie = new InlineEdit(elem);
-            elem.inEdit = ie;
-        });
-    }
-
+    // Add a new button or select
     addCommand(id, obj) {
         if (this.toolbarItems[id] !== undefined) {
             return false;
@@ -175,11 +172,12 @@ class InlineEdit {
                 return true;
             }
             if (this.toolbarItems[key].type == 'button') {
+                const icon = (inEdit.template && inEdit.template.icons && inEdit.template.icons[key]) ? inEdit.template.icons[key] : this.toolbarItems[key].icon;
                 const btn = tag('a', {
                     'href': 'javascript://', 
                     'class': `ie-btn btn-${key}`, 
                     'title': this.toolbarItems[key].tooltip ?? ''
-                }, `<i class="${this.toolbarItems[key].icon}"></i>`);
+                }, `<span class="${icon}"></span>`);
                 btn.addEventListener('click', this.toolbarItems[key].callback.bind(this));
                 nodes.push(btn);
                 return true;
@@ -217,8 +215,10 @@ class InlineEdit {
             if (this.toolbarItems.font) {
                 const combo = this.get('.combo-font');
                 if (combo) {
-                    const font = currentStyle(elem)['fontFamily'];
+                    const font = currentStyle(elem)['fontFamily'].replace(/^"|"$/g, '');
+                    console.log('FONT', font);
                     if (this.toolbarItems.font.options[font]) {
+                        console.log('FONT inside', font);
                         combo.value = font;
                     } else {
                         combo.value = '';
